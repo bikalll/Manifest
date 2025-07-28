@@ -1,5 +1,5 @@
    const simpleQuotes = [
-          "Sampada Nigga
+          "Sampada Nigga"
         ];
         const scene = document.getElementById('scene');
         const textOverlay = document.getElementById('textOverlay');
