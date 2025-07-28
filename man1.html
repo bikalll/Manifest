@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cosmic Manifestation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(to bottom, #0c1445, #1a237e, #0c1445);
+            color: #f0f8ff;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        .scene { position: absolute; inset: 0; overflow: hidden; }
+        .mountains {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30vh;
+            background: linear-gradient(to top, #1a237e, #283593);
+            clip-path: polygon(
+                0% 100%, 10% 75%, 20% 85%, 30% 65%, 40% 80%,
+                50% 60%, 60% 75%, 70% 55%, 80% 70%, 90% 50%,
+                100% 65%, 100% 100%, 0% 100%
+            );
+        }
+        .star { position: absolute; background: #fff; border-radius: 50%; animation: twinkle var(--duration) infinite ease-in-out; }
+        @keyframes twinkle { 0%,100% { opacity:0.2; } 50% { opacity:1; }}
+        .moon {
+            position: absolute;
+            top: 10vh;
+            right: 10vw;
+            width: 15vw;
+            height: 15vw;
+            max-width: 80px;
+            max-height: 80px;
+            background: radial-gradient(circle, #f5f5dc, #a9a9a9);
+            border-radius: 50%;
+            box-shadow: 0 0 4vw rgba(245,245,220,0.9);
+            animation: rotateMoon 30s linear infinite;
+        }
+        .moon-crater { position: absolute; background: rgba(169,169,169,0.6); border-radius: 50%; }
+        @keyframes rotateMoon { to { transform: rotate(360deg); }}
+        .text-overlay {
+            position: absolute;
+            top:50%; left:50%;
+            width: 80vw;
+            max-width: 400px;
+            transform: translate(-50%, -50%) scale(0.9);
+            text-align:center;
+            font-family:'Cinzel', serif;
+            font-size: 6vw;
+            line-height:1.4;
+            word-wrap: break-word;
+            text-shadow:0 0 2vw rgba(0,0,0,0.5);
+            opacity: 0;
+            transition: opacity 1s ease, transform 1s ease;
+            transform-origin: center center;
+        }
+        .text-overlay.visible {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        .author { font-family: 'Montserrat', sans-serif; font-size:4vw; margin-top:2vw; color:#bbdefb; text-shadow:0 0 1vw rgba(0,0,0,0.3); }
+        .footer { position:absolute; bottom:5vw; width:100%; text-align:center; font-size:3vw; color:rgba(255,255,255,0.7); opacity:0; transition:opacity 2s; }
+        .footer.visible { opacity:1; }
+        @media (max-width:600px) {
+            .mountains { height: 20vh; clip-path: polygon(0% 100%,20% 70%,40% 80%,60% 60%,80% 75%,100% 50%,100% 100%,0% 100%); }
+            .text-overlay { font-size: 8vw; max-width: 90vw; }
+            .author { font-size:5vw; margin-top:3vw; }
+            .footer { font-size:4vw; bottom:6vw; }
+        }
+        @media (min-width:600px) {
+            .text-overlay { font-size:2rem; }
+            .author { font-size:1.2rem; margin-top:0.8rem; }
+            .footer { font-size:0.9rem; bottom:20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="scene" id="scene">
+        <div class="mountains"></div>
+    </div>
+    <div class="text-overlay" id="textOverlay"></div>
+    <div class="footer" id="footer">Align your thoughts with the frequency of your desires. The universe is always listening.</div>
+    <script>
+        const simpleQuotes = [
+            "You surely will get what you want.",
+            "The universe hears you.",
+            "Believe in your dreams.",
+            "Good things are coming.",
+            "Trust the process.",
+            "You are enough.",
+            "Abundance flows to you.",
+            "You are a light.",
+            "Embrace the magic within.",
+            "Joy is your birthright.",
+            "Everything unfolds perfectly.",
+            "You create your reality.",
+            "You are worthy of love.",
+            "Let your heart guide you.",
+            "Gratitude opens doors.",
+            "You are stronger than you think.",
+            "Peace begins with you.",
+            "You attract positivity.",
+            "Dream big, act now.",
+            "Your spirit is limitless."
+        ];
+        const scene = document.getElementById('scene');
+        const textOverlay = document.getElementById('textOverlay');
+        const footer = document.getElementById('footer');
+
+        function createStars() {
+            const count = window.innerWidth < 600 ? 80 : 150;
+            for (let i = 0; i < count; i++) {
+                const s = document.createElement('div');
+                s.className = 'star';
+                const size = (Math.random() * 2 + 1) * (window.innerWidth<600?0.5:1);
+                const top = Math.random() * 85;
+                const left = Math.random() * 100;
+                const dur = 2 + Math.random() * 5;
+                s.style = `width:${size}px;height:${size}px;top:${top}%;left:${left}%;--duration:${dur}s;`;
+                scene.appendChild(s);
+            }
+            const moon = document.createElement('div');
+            moon.className = 'moon';
+            const craterPositions = [
+                { top: '15%', left: '20%', size: '10%' },
+                { top: '45%', left: '60%', size: '8%' },
+                { top: '60%', left: '30%', size: '6%' }
+            ];
+            craterPositions.forEach(pos => {
+                const c = document.createElement('div');
+                c.className = 'moon-crater';
+                c.style = `width:${pos.size};height:${pos.size};top:${pos.top};left:${pos.left};`;
+                moon.appendChild(c);
+            });
+            scene.appendChild(moon);
+        }
+
+        function showQuote() {
+            const q = simpleQuotes[Math.floor(Math.random() * simpleQuotes.length)];
+            textOverlay.innerHTML = q + '<div class="author">—</div>';
+            textOverlay.classList.add('visible');
+        }
+
+        function createExplosion(x, y) {
+            const count = window.innerWidth < 600 ? 8 : 12;
+            for (let i = 0; i < count; i++) {
+                const e = document.createElement('div');
+                e.className = 'explosion';
+                const size = (10 + Math.random() * 20) * (window.innerWidth<600?0.5:1);
+                const colors = ['#bbdefb', '#90caf9', '#64b5f6', '#42a5f5'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                e.style = `position:absolute;left:${x - size/2}px;top:${y - size/2}px;width:${size}px;height:${size}px;border-radius:50%;background:radial-gradient(circle,#fff 0%,${color}30%,rgba(255,255,255,0)70%);box-shadow:0 0 ${size/2}px ${size/3}px ${color}`;
+                scene.appendChild(e);
+                const angle = Math.random() * 2 * Math.PI;
+                const dist = (20 + Math.random() * 20) * (window.innerWidth<600?0.5:1);
+                const endX = x + Math.cos(angle) * dist;
+                const endY = y + Math.sin(angle) * dist;
+                const dur = 600 + Math.random() * 400;
+                e.animate([
+                    { transform: 'scale(0)', opacity: 1 },
+                    { transform: 'scale(1)', opacity: 0, left: `${endX - size/2}px`, top: `${endY - size/2}px` }
+                ], { duration: dur, easing: 'ease-out' });
+                setTimeout(() => e.remove(), dur);
+            }
+        }
+
+        function animateGuidingLight() {
+            const light = document.createElement('div');
+            light.style = 'position:absolute;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle,#fff,#64b5f6);box-shadow:0 0 15px rgba(100,181,246,0.7);';
+            scene.appendChild(light);
+            const startX = Math.random() * window.innerWidth;
+            const startY = Math.random() * window.innerHeight;
+            light.style.left = startX + 'px';
+            light.style.top = startY + 'px';
+            setTimeout(() => {
+                light.style.transition = 'all 1.8s ease-out';
+                light.style.left = window.innerWidth/2 + 'px';
+                light.style.top = window.innerHeight/2 + 'px';
+                light.style.transform = `scale(${window.innerWidth<600?2:3})`;
+            }, 100);
+            setTimeout(() => {
+                light.remove();
+                createExplosion(window.innerWidth/2, window.innerHeight/2);
+                showQuote();
+                footer.classList.add('visible');
+            }, 2000);
+        }
+
+        window.addEventListener('load', () => {
+            createStars();
+            animateGuidingLight();
+        });
+        window.addEventListener('resize', () => {
+            scene.innerHTML = '<div class="mountains"></div>';
+            createStars();
+        });
+    </script>
+</body>
+</html>
